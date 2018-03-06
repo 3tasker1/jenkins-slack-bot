@@ -1,9 +1,9 @@
-package uk.co.aledlewis.resources;
+package uk.co.christasker.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.webhook.Payload;
-import uk.co.aledlewis.api.Result;
+import uk.co.christasker.api.Result;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

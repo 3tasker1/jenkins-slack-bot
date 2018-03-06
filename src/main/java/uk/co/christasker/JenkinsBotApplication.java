@@ -25,7 +25,6 @@ public class SlackTestApplication extends Application<SlackTestConfiguration> {
     Slack slack = Slack.getInstance(new SlackHttpClient(client));
 
     SampleSlackResource sampleSlackResource = new SampleSlackResource(slack, slackTestConfiguration.getSlackWebhookUrl());
-
     environment.jersey().register(sampleSlackResource);
 
   }
