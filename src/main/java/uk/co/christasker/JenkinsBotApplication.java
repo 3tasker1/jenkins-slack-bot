@@ -1,4 +1,4 @@
-package uk.co.aledlewis;
+package uk.co.christasker;
 
 import com.codahale.metrics.MetricRegistry;
 import com.github.seratch.jslack.Slack;
@@ -8,12 +8,12 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import okhttp3.OkHttpClient;
-import uk.co.aledlewis.resources.SampleSlackResource;
+import uk.co.christasker.resources.SlackWebhookResource;
 
-public class SlackTestApplication extends Application<SlackTestConfiguration> {
+public class JenkinsBotApplication extends Application<JenkinsBotConfiguration> {
 
   @Override
-  public void run(SlackTestConfiguration slackTestConfiguration,
+  public void run(JenkinsBotConfiguration slackTestConfiguration,
                   Environment environment) {
 
 
@@ -24,23 +24,23 @@ public class SlackTestApplication extends Application<SlackTestConfiguration> {
 
     Slack slack = Slack.getInstance(new SlackHttpClient(client));
 
-    SampleSlackResource sampleSlackResource = new SampleSlackResource(slack, slackTestConfiguration.getSlackWebhookUrl());
-    environment.jersey().register(sampleSlackResource);
+    SlackWebhookResource slackWebhookResource = new SlackWebhookResource(slack, slackTestConfiguration.getSlackWebhookUrl());
+    environment.jersey().register(slackWebhookResource);
 
   }
 
   @Override
   public String getName() {
-    return "hello-world";
+    return "jenkins-bot";
   }
 
   @Override
-  public void initialize(Bootstrap<SlackTestConfiguration> bootstrap) {
+  public void initialize(Bootstrap<JenkinsBotConfiguration> bootstrap) {
 
   }
 
 
   public static void main(String[] args) throws Exception {
-    new SlackTestApplication().run(args);
+    new JenkinsBotApplication().run(args);
   }
 }

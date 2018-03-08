@@ -1,42 +1,52 @@
 package uk.co.christasker.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.webhook.Payload;
-import uk.co.christasker.api.Result;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.Optional;
 
 @Path("/slack")
 @Produces(MediaType.APPLICATION_JSON)
-public class SampleSlackResource {
+public class SlackWebhookResource {
 
   private final Slack slack;
   private final String webhookUrl;
 
-  public SampleSlackResource(Slack slack, String webhookUrl) {
+  public SlackWebhookResource(Slack slack, String webhookUrl) {
     this.slack = slack;
     this.webhookUrl = webhookUrl;
   }
 
-  @GET
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
   @Timed
-  public Result sendMessage(@QueryParam("content") Optional<String> content) {
+  public Response slackEndPoint(String bodyData) {
 
-    Payload payload = Payload.builder()
-      .text(content.orElse("Put something in the content query param (e.g. http://localhost:8080/slack?content=I've%20done%20it%20properly%20now)"))
-      .build();
-
+    ObjectMapper objectMapper = new ObjectMapper();
     try {
-      slack.send(webhookUrl, payload);
-      return new Result("200","ok");
+      JsonNode bodyJSON = objectMapper.readTree(bodyData);
+      if(bodyJSON.has("challenge")) {
+        //Need to return the challenge as it must be a new connection from slack
+        return Response.ok(bodyJSON, MediaType.APPLICATION_JSON).build();
+      } else {
+        //No Challenge so need to handle it as an event
+        slack.send(
+          webhookUrl
+          , Payload.builder().text("Watch this space!").build()
+        );
+        return Response.ok().build();
+      }
     } catch (IOException e) {
-      throw new WebApplicationException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+      return Response.serverError().build();
     }
+
 
   }
 }

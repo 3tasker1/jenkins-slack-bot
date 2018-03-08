@@ -1,10 +1,10 @@
-package uk.co.aledlewis;
+package uk.co.christasker;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SlackTestConfiguration extends Configuration {
+public class JenkinsBotConfiguration extends Configuration {
 
 
   @NotEmpty
