@@ -10,6 +10,18 @@ public class JenkinsBotConfiguration extends Configuration {
   @NotEmpty
   private String slackWebhookUrl;
 
+  @NotEmpty
+  private String jenkinsUrl;
+
+  @JsonProperty
+  public String getJenkinsUrl() {
+    return jenkinsUrl;
+  }
+
+  @JsonProperty
+  public void setJenkinsUrl(String jenkinsUrl) {
+    this.jenkinsUrl = jenkinsUrl;
+  }
 
   @JsonProperty
   public String getSlackWebhookUrl() {

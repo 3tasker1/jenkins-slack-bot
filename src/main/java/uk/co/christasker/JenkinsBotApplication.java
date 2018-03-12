@@ -8,6 +8,8 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import okhttp3.OkHttpClient;
+import uk.co.christasker.resources.SlackCommandResource;
+import uk.co.christasker.resources.SlackDialogSubmitted;
 import uk.co.christasker.resources.SlackWebhookResource;
 
 public class JenkinsBotApplication extends Application<JenkinsBotConfiguration> {
@@ -24,8 +26,12 @@ public class JenkinsBotApplication extends Application<JenkinsBotConfiguration> 
 
     Slack slack = Slack.getInstance(new SlackHttpClient(client));
 
-    SlackWebhookResource slackWebhookResource = new SlackWebhookResource(slack, slackTestConfiguration.getSlackWebhookUrl());
+    SlackWebhookResource slackWebhookResource = new SlackWebhookResource();
+    SlackCommandResource slackCommandResource = new SlackCommandResource(slack, slackTestConfiguration.getSlackWebhookUrl());
+    SlackDialogSubmitted slackDialogSubmitted = new SlackDialogSubmitted(client, slackTestConfiguration.getJenkinsUrl());
     environment.jersey().register(slackWebhookResource);
+    environment.jersey().register(slackCommandResource);
+    environment.jersey().register(slackDialogSubmitted);
 
   }
 
